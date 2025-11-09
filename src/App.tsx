@@ -48,7 +48,11 @@ export default function App() {
           console.warn(`⚠️ Warm-up failed for ${url} (${res.status})`);
         }
       } catch (err) {
-        console.warn(`🚫 Error warming ${url}:`, err.message);
+        if (err instanceof Error) {
+          console.warn(`🚫 Error warming ${url}:`, err.message);
+        } else {
+          console.warn(`🚫 Error warming ${url}:`, String(err));
+        }
       }
     });
   }, []);
