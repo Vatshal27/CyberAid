@@ -68,7 +68,7 @@ export default function App() {
   return (
     <div className="dashboard">
       {/* Sidebar */}
-      <aside className={`sidebar ${sidebarOpen ? "" : "closed"}`}>
+<aside className={`sidebar ${sidebarOpen ? "open" : "closed"}`}>
         <div className="logo">
           <div className="logo-icon">
             <Database className="w-6 h-6 text-white" />
@@ -169,36 +169,111 @@ export default function App() {
         </header>
 
         {/* Content */}
-        <section className="content">
-          {activeTab === "dashboard" && (
-            <div className="tool-page">
-              <h1>Security Dashboard</h1>
-              <p>Monitor your tools and manage your cyber utilities in one place.</p>
+        <section className="content"> 
+ {activeTab === "dashboard" && (
+  <div className="tool-page">
+    <h1>CyberAid Intelligence Center</h1>
+    <p className="subtitle">
+      Real-time system overview — monitor security tools, threat analytics, and performance indicators.
+    </p>
 
-              <div className="metric-section">
-                <div className="metric-card">
-                  <Shield className="metric-icon" />
-                  <h2>Password Analyzer</h2>
-                  <p>Analyze password strength, security, and breaches.</p>
-                </div>
-                <div className="metric-card">
-                  <AlertTriangle className="metric-icon" />
-                  <h2>Phishing Detector</h2>
-                  <p>Scan URLs for potential phishing or malicious intent.</p>
-                </div>
-                <div className="metric-card">
-                  <Code2 className="metric-icon" />
-                  <h2>Vulnerability Scanner</h2>
-                  <p>Detect and analyze code vulnerabilities in real time.</p>
-                </div>
-                <div className="metric-card">
-                  <KeyRound className="metric-icon" />
-                  <h2>Encryptor / Decryptor</h2>
-                  <p>Encrypt or decrypt text with secure key management.</p>
-                </div>
-              </div>
+    {/* === ACTIVE TOOLS SECTION === */}
+    <div className="active-tools-section">
+      <h2 className="section-title">Active Tools</h2>
+
+      <div className="tool-grid">
+        {[
+          {
+            name: "Password Analyzer",
+            desc: "Monitors password strength and detects weak or reused credentials.",
+            icon: <Lock />,
+          },
+          {
+            name: "Phishing Detector",
+            desc: "Analyzes URLs and domains for malicious or fraudulent intent.",
+            icon: <AlertTriangle />,
+          },
+          {
+            name: "Vulnerability Scanner",
+            desc: "Identifies risky code patterns and potential software exploits.",
+            icon: <Code2 />,
+          },
+          {
+            name: "Encryptor / Decryptor",
+            desc: "Handles secure text encryption and decryption with unique keys.",
+            icon: <KeyRound />,
+          },
+        ].map((tool, i) => (
+          <div key={i} className="status-card glass large">
+            <div className="status-card-header">
+              <div className="status-icon">{tool.icon}</div>
+              <h3>{tool.name}</h3>
             </div>
-          )}
+            <p className="status-desc">{tool.desc}</p>
+            <p className="online">Active</p>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    {/* === ANALYTICS SECTION === */}
+    <div className="analytics-section">
+      <h2 className="section-title">System Analytics</h2>
+
+      <div className="analytics-grid">
+        <div className="metric-card glass large">
+          <Activity className="metric-icon" />
+          <h2>Threat Activity</h2>
+          <ThreatChart />
+          <p className="metric-footer">
+            Last updated: {new Date().toLocaleTimeString()}
+          </p>
+        </div>
+
+        <div className="metric-card glass large">
+          <Shield className="metric-icon" />
+          <h2>Threat Level</h2>
+          <div className="threat-meter">
+            <div className="meter-bar">
+              <div className="meter-fill" style={{ width: "62%" }}></div>
+            </div>
+            <p>
+              Current Risk: <strong>Moderate</strong>
+            </p>
+          </div>
+          <p className="metric-footer">AI assessment: Stable</p>
+        </div>
+
+        <div className="metric-card glass large">
+          <Database className="metric-icon" />
+          <h2>System Metrics</h2>
+          <AnimatedCounter label="Total Scans" value={1246} />
+          <AnimatedCounter label="Threats Blocked" value={83} />
+          <AnimatedCounter label="Files Encrypted" value={562} />
+          <p className="metric-footer">Performance: 98.4% efficiency</p>
+        </div>
+
+        <div className="metric-card glass large">
+          <User className="metric-icon" />
+          <h2>System Status</h2>
+          <p>Active Users: 312</p>
+          <p>Uptime: 99.98%</p>
+          <p>Last Sync: {new Date().toLocaleString()}</p>
+          <p className="metric-footer">Network latency: 42ms</p>
+        </div>
+      </div>
+    </div>
+
+    {/* Footer Ticker */}
+    <div className="ticker glass">
+      🔔 System update completed • 🧠 Threat model synced • 🔒 12 new security signatures deployed • ☁️ Cloud backup stable
+    </div>
+  </div>
+)}
+
+
+
+
 
           {activeTab === "password" && (
             <div className="tool-page">
@@ -267,3 +342,66 @@ export default function App() {
     </div>
   );
 }
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+
+const ThreatChart = () => {
+  const data = [
+    { day: "Mon", threats: 2 },
+    { day: "Tue", threats: 5 },
+    { day: "Wed", threats: 3 },
+    { day: "Thu", threats: 8 },
+    { day: "Fri", threats: 4 },
+    { day: "Sat", threats: 6 },
+    { day: "Sun", threats: 5 },
+  ];
+
+  return (
+    <div style={{ width: "100%", height: 150 }}>
+      <ResponsiveContainer>
+        <LineChart data={data}>
+          <XAxis dataKey="day" stroke="#888" />
+          <YAxis hide />
+          <Tooltip />
+          <Line
+            type="monotone"
+            dataKey="threats"
+            stroke="#4fc3f7"
+            strokeWidth={2}
+            dot={{ r: 3 }}
+            activeDot={{ r: 6 }}
+          />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
+  );
+};
+const AnimatedCounter = ({ label, value }: { label: string; value: number }) => {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    let start = 0;
+    const end = value;
+    if (start === end) return;
+    const totalDuration = 1500;
+    const incrementTime = 10;
+    const step = (end - start) / (totalDuration / incrementTime);
+
+    const timer = setInterval(() => {
+      start += step;
+      if (start >= end) {
+        start = end;
+        clearInterval(timer);
+      }
+      setCount(Math.floor(start));
+    }, incrementTime);
+
+    return () => clearInterval(timer);
+  }, [value]);
+
+  return (
+    <div className="counter">
+      <h3>{label}</h3>
+      <p>{count.toLocaleString()}</p>
+    </div>
+  );
+};
